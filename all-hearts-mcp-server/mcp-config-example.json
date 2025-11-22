@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "all-hearts": {
+      "command": "node",
+      "args": [
+        "/Users/natesh.bhat/Desktop/All-Hearts-2025/all-hearts-mcp-server/dist/index.js"
+      ]
+    }
+  }
+}
+
+
+
+
+

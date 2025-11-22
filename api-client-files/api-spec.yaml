@@ -1,0 +1,694 @@
+openapi: 3.0.3
+info:
+  title: All Hearts 2025 Games API
+  description: API for managing game sessions and submissions for the All Hearts 2025 event
+  version: 1.0.0
+  contact:
+    name: Isha Foundation IT Department
+servers:
+  - url: https://all-hearts-2025-games.netlify.app
+    description: Production server
+
+tags:
+  - name: Game Timings
+    description: Game schedule and timing information
+  - name: Crossword
+    description: Crossword game sessions
+  - name: Wordle
+    description: Wordle game sessions
+  - name: Typing
+    description: Typing game sessions
+  - name: Sudoku
+    description: Sudoku game sessions
+  - name: Memory
+    description: Memory game sessions
+
+paths:
+  /api/game-timings:
+    get:
+      tags:
+        - Game Timings
+      summary: Get game timings
+      description: Retrieve start and end times for all games
+      operationId: getGameTimings
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GameTiming"
+
+  /api/games/crossword:
+    get:
+      tags:
+        - Crossword
+      summary: Get crossword puzzle data
+      description: Retrieve the crossword puzzle configuration
+      operationId: getCrosswordPuzzle
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Crossword puzzle data
+
+  /api/games/crossword/sessions:
+    get:
+      tags:
+        - Crossword
+      summary: Get all crossword sessions
+      description: Retrieve all crossword game sessions
+      operationId: getCrosswordSessions
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GameSession"
+
+    post:
+      tags:
+        - Crossword
+      summary: Create crossword session
+      description: Create a new crossword game session (Step 1 of 2-step process)
+      operationId: createCrosswordSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CrosswordSessionCreate"
+      responses:
+        "200":
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameSession"
+
+    patch:
+      tags:
+        - Crossword
+      summary: Update crossword session
+      description: Update an existing crossword session with results (Step 2 of 2-step process)
+      operationId: updateCrosswordSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CrosswordSessionUpdate"
+      responses:
+        "200":
+          description: Session updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameSession"
+
+  /api/games/wordle/dictionary:
+    get:
+      tags:
+        - Wordle
+      summary: Get wordle dictionary
+      description: Retrieve the list of valid words for wordle
+      operationId: getWordleDictionary
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /api/games/wordle/sessions:
+    get:
+      tags:
+        - Wordle
+      summary: Get all wordle sessions
+      description: Retrieve all wordle game sessions
+      operationId: getWordleSessions
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GameSession"
+
+    post:
+      tags:
+        - Wordle
+      summary: Create wordle session
+      description: Create a new wordle game session (Step 1 of 2-step process)
+      operationId: createWordleSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WordleSessionCreate"
+      responses:
+        "200":
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameSession"
+
+    patch:
+      tags:
+        - Wordle
+      summary: Update wordle session
+      description: Update an existing wordle session with results (Step 2 of 2-step process)
+      operationId: updateWordleSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WordleSessionUpdate"
+      responses:
+        "200":
+          description: Session updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameSession"
+
+  /api/games/typing/sessions:
+    get:
+      tags:
+        - Typing
+      summary: Get all typing sessions
+      description: Retrieve all typing game sessions
+      operationId: getTypingSessions
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GameSession"
+
+    post:
+      tags:
+        - Typing
+      summary: Create typing session
+      description: Create a new typing game session (Step 1 of 2-step process)
+      operationId: createTypingSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TypingSessionCreate"
+      responses:
+        "200":
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameSession"
+
+    patch:
+      tags:
+        - Typing
+      summary: Update typing session
+      description: Update an existing typing session with results (Step 2 of 2-step process)
+      operationId: updateTypingSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TypingSessionUpdate"
+      responses:
+        "200":
+          description: Session updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameSession"
+
+  /api/games/sudoku/sessions:
+    get:
+      tags:
+        - Sudoku
+      summary: Get all sudoku sessions
+      description: Retrieve all sudoku game sessions
+      operationId: getSudokuSessions
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GameSession"
+
+    post:
+      tags:
+        - Sudoku
+      summary: Submit sudoku game
+      description: Create and submit a sudoku game session
+      operationId: submitSudokuGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SudokuGameSubmission"
+      responses:
+        "200":
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameSession"
+
+  /api/games/memory/sessions:
+    get:
+      tags:
+        - Memory
+      summary: Get all memory sessions
+      description: Retrieve all memory game sessions
+      operationId: getMemorySessions
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GameSession"
+
+    post:
+      tags:
+        - Memory
+      summary: Submit memory game
+      description: Create and submit a memory game session
+      operationId: submitMemoryGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemoryGameSubmission"
+      responses:
+        "200":
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameSession"
+
+components:
+  schemas:
+    GameTiming:
+      type: object
+      properties:
+        game:
+          type: string
+          enum: [crossword, wordle, typing, sudoku, memory]
+        start:
+          type: string
+          format: date-time
+          description: Game start time in ISO 8601 format
+        end:
+          type: string
+          format: date-time
+          description: Game end time in ISO 8601 format
+
+    GameSession:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique session identifier
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+        house:
+          type: string
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+          description: House name (note trailing space for some houses)
+        gameType:
+          type: string
+          enum: [crossword, wordle, typing, sudoku, memory]
+        completed:
+          type: boolean
+        score:
+          type: number
+        bestScore:
+          type: number
+        accuracy:
+          type: number
+        bestAccuracy:
+          type: number
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+
+    CrosswordSessionCreate:
+      type: object
+      required:
+        - playerEmail
+        - playerName
+        - totalWords
+      properties:
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+        house:
+          type: string
+          default: "Shakti Compliers "
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+        gameType:
+          type: string
+          enum: [crossword]
+          default: crossword
+        totalWords:
+          type: number
+          description: Total number of words in the crossword puzzle
+
+    CrosswordSessionUpdate:
+      type: object
+      required:
+        - id
+        - playerEmail
+        - playerName
+        - house
+        - startTime
+        - endTime
+        - totalWords
+        - correctAnswers
+        - completed
+      properties:
+        id:
+          type: string
+          description: Session ID from create step
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+          description: Sent as 'name' in request
+        house:
+          type: string
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        totalWords:
+          type: number
+        correctAnswers:
+          type: number
+        completed:
+          type: boolean
+
+    WordleSessionCreate:
+      type: object
+      required:
+        - playerEmail
+        - playerName
+      properties:
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+        house:
+          type: string
+          default: "Shakti Compliers "
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+        gameType:
+          type: string
+          enum: [wordle]
+          default: wordle
+
+    WordleSessionUpdate:
+      type: object
+      required:
+        - id
+        - playerEmail
+        - playerName
+        - house
+        - startTime
+        - endTime
+        - attemptsUsed
+        - solved
+        - score
+        - wordsSolved
+      properties:
+        id:
+          type: string
+          description: Session ID from create step
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+          description: Sent as 'name' in request
+        house:
+          type: string
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        attemptsUsed:
+          type: number
+          description: Number of attempts used (max of 1 and actual attempts)
+        solved:
+          type: boolean
+          description: Whether puzzle was solved (wordsSolved > 0)
+        score:
+          type: number
+        greens:
+          type: number
+          description: Number of green letters (correct position)
+        yellows:
+          type: number
+          description: Number of yellow letters (wrong position)
+        wordsSolved:
+          type: number
+
+    TypingSessionCreate:
+      type: object
+      required:
+        - playerEmail
+        - playerName
+      properties:
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+        house:
+          type: string
+          default: "Shakti Compliers "
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+
+    TypingSessionUpdate:
+      type: object
+      required:
+        - id
+        - playerEmail
+        - playerName
+        - house
+        - startTime
+        - endTime
+        - bestRound
+      properties:
+        id:
+          type: string
+          description: Session ID from create step
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+          description: Sent as 'name' in request
+        house:
+          type: string
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        bestRound:
+          type: object
+          required:
+            - score
+            - accuracy
+            - duration
+            - wpm
+          properties:
+            score:
+              type: number
+            accuracy:
+              type: number
+              minimum: 0
+              maximum: 100
+            duration:
+              type: number
+              description: Duration in seconds (typically 45s)
+            wpm:
+              type: number
+              description: Words per minute
+        rounds:
+          type: array
+          items:
+            type: object
+            properties:
+              score:
+                type: number
+              accuracy:
+                type: number
+              duration:
+                type: number
+              wpm:
+                type: number
+              timestamp:
+                type: string
+                format: date-time
+
+    SudokuGameSubmission:
+      type: object
+      required:
+        - playerEmail
+        - playerName
+      properties:
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+        house:
+          type: string
+          default: "Shakti Compliers "
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+        gameType:
+          type: string
+          enum: [sudoku]
+          default: sudoku
+        difficulty:
+          type: string
+        timeTaken:
+          type: number
+          description: Time taken in seconds
+        completed:
+          type: boolean
+
+    MemoryGameSubmission:
+      type: object
+      required:
+        - playerEmail
+        - playerName
+      properties:
+        playerEmail:
+          type: string
+          format: email
+        playerName:
+          type: string
+        house:
+          type: string
+          default: "Shakti Compliers "
+          enum:
+            [
+              "Shakti Compliers ",
+              "Karma Debuggers ",
+              "Zen Coders",
+              "Akashic Warriors",
+            ]
+        gameType:
+          type: string
+          enum: [memory]
+          default: memory
+        moves:
+          type: number
+          description: Number of moves made
+        timeTaken:
+          type: number
+          description: Time taken in seconds
+        completed:
+          type: boolean

@@ -1,0 +1,14 @@
+type: workspace
+model: workspace
+id: wk_yy8iozDnYD
+createdAt: 2025-11-22T06:14:21.228798
+updatedAt: 2025-11-22T06:14:21.228798
+authentication: {}
+authenticationType: null
+description: ''
+headers: []
+name: All Hearts
+encryptionKeyChallenge: null
+settingValidateCertificates: true
+settingFollowRedirects: true
+settingRequestTimeout: 0

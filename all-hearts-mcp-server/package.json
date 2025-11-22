@@ -1,0 +1,36 @@
+{
+  "name": "all-hearts-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for All Hearts 2025 games API",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "all-hearts-mcp-server": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "dev": "tsx src/index.ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "all-hearts",
+    "games"
+  ],
+  "author": "Natesh Bhat",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
+
+
+
+
