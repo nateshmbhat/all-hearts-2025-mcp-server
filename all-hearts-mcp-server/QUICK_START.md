@@ -87,3 +87,4 @@ The server is configured and ready. Just restart Cursor and start using it!
 
 
 
+

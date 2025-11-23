@@ -170,13 +170,53 @@ export interface SudokuGameSubmission {
   completed?: boolean;
 }
 
+export interface SudokuSessionCreate {
+  playerEmail: string;
+  house: string;
+  playerName: string;
+  gameType: "sudoku";
+}
+
+export interface SudokuSessionUpdate {
+  id: string;
+  playerEmail: string;
+  house: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  difficulty?: string;
+  timeTaken?: number;
+  completed?: boolean;
+}
+
 // Memory game specific types
 export interface MemoryGameSubmission {
   playerName: string;
   playerEmail: string;
   house: string;
   gameType: "memory";
-  moves?: number;
-  timeTaken?: number;
+  triesUsed?: number;
+  matchesFound?: number;
+  duration?: number;
+  completed?: boolean;
+}
+
+export interface MemorySessionCreate {
+  playerEmail: string;
+  house: string;
+  playerName: string;
+  gameType: "memory";
+}
+
+export interface MemorySessionUpdate {
+  id: string;
+  playerEmail: string;
+  house: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  triesUsed?: number;
+  matchesFound?: number;
+  duration?: number;
   completed?: boolean;
 }

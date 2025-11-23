@@ -4,10 +4,22 @@ My house name : "Shakti Compliers"
 Leaderboard link : https://all-hearts-2025-games.netlify.app/leaderboard
 
 - Our slack channel name consisting of all the members of all houses is : "itapps-all-hearts-meeting-2025"
-- slack Channel ID : C09T8C5K9T6
-- Our slack group of shakti compliers is : "shakti-compliers"
+- Our slack group of shakti compliers is : "shakti-compliers" with slack id : C09T8C5K9T6
 - NEVER SEND SLACK messages without final confirmation from me. Before you send anything just show me the message and ask me if it is correct and if i give you permission then only send the message.
 - When you send a slack message through MCP, if the person is male use "anna" and if the person is female use "akka" in the message to address them. Also instead of Hello or Hi use "Namaskaram".
+
+## Team Members
+
+House Name : Shakti Compliers ( My house )
+**Captain:** Jayanth Pappaiah
+**Total:** 62 team members (including Captain)
+📋 **Complete team member details with Slack User IDs:** See `shakti-compliers-members.md`
+
+--- 
+Other houses details in : 
+Karma Debuggers : `karma-debuggers-members.md`
+Akashic Warriors : `akashic-warriors-members.md`
+Zen Coders: `zen-coders-members.md`
 
 
 ### GOAL 
@@ -19,12 +31,7 @@ Our goal is to ensure everyone or as many as possible in the team partcipates in
 For example : 
 "Namaskaram anna, can you please join the game?"
 "akka, did you get a chance to play the game ? do you need any help akka ?"
-
-## Team Members
-
-**Total:** 62 team members (including Captain)
-
-📋 **Complete team member details with Slack User IDs:** See `shakti-compliers-members.md`
+- **NEVER create documentation markdown files (like NEW_MCP_TOOLS.md, DOCUMENTATION.md, etc.) unless explicitly asked to do so.**
 
 ---
 

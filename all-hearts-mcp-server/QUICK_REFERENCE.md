@@ -259,8 +259,35 @@ These tools still exist but don't follow the proper two-step process:
 - ❌ `submit_typing_game` - Use `create_typing_session` + `update_typing_session` instead
 - ❌ `submit_wordle_game` - Use `create_wordle_session` + `update_wordle_session` instead
 - ❌ `submit_crossword_game` - Use `create_crossword_session` + `update_crossword_session` instead
-- ❌ `submit_sudoku_game` - Keep using (no update needed yet)
-- ❌ `submit_memory_game` - Keep using (no update needed yet)
+- ✅ `submit_sudoku_game` - Keep using (no two-step process available yet)
+- ✅ `submit_memory_game` - Keep using (no two-step process available yet)
+
+### Memory Game Submission
+**Tool:** `submit_memory_game`
+```typescript
+{
+  playerEmail: string,
+  playerName: string,
+  house?: string,       // Default: "Shakti Compliers "
+  triesUsed?: number,    // Number of tries/attempts used
+  matchesFound?: number, // Number of matches found
+  duration?: number,     // Time taken in seconds
+  completed?: boolean    // Whether game was completed
+}
+```
+
+**Example:**
+```javascript
+await submit_memory_game({
+  playerEmail: "test@sadhguru.org",
+  playerName: "Test User",
+  house: "Shakti Compliers ",
+  triesUsed: 20,
+  matchesFound: 8,
+  duration: 649,
+  completed: true
+});
+```
 
 ---
 

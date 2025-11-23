@@ -75,8 +75,9 @@ Submit a memory game entry for a user.
 - `playerEmail` (required): Email address of the player
 - `playerName` (required): Display name of the player
 - `house` (optional): House name (default: "Shakti Compliers ")
-- `moves` (optional): Number of moves made
-- `timeTaken` (optional): Time taken in seconds
+- `triesUsed` (optional): Number of tries/attempts used in the game
+- `matchesFound` (optional): Number of matches found in the game
+- `duration` (optional): Time taken in seconds (duration of the game)
 - `completed` (optional): Whether game was completed
 
 ### 8. `get_game_timings`
@@ -158,6 +159,7 @@ all-hearts-mcp-server/
 ## License
 
 MIT
+
 
 
 

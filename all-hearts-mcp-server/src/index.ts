@@ -29,7 +29,11 @@ import {
   WordleSessionCreate,
   WordleSessionUpdate,
   SudokuGameSubmission,
+  SudokuSessionCreate,
+  SudokuSessionUpdate,
   MemoryGameSubmission,
+  MemorySessionCreate,
+  MemorySessionUpdate,
 } from "./types.js";
 
 // Initialize API client
@@ -221,8 +225,77 @@ const TOOLS: Tool[] = [
     },
   },
   {
+    name: "create_sudoku_session",
+    description:
+      "Create a new Sudoku game session (Step 1: POST). Returns session ID and start time for later updates.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        playerEmail: {
+          type: "string",
+          description: "Email address of the player",
+        },
+        playerName: {
+          type: "string",
+          description: "Display name of the player",
+        },
+        house: {
+          type: "string",
+          description: 'House name (default: "Shakti Compliers ")',
+          default: "Shakti Compliers ",
+        },
+      },
+      required: ["playerEmail", "playerName"],
+    },
+  },
+  {
+    name: "update_sudoku_session",
+    description:
+      "Update an existing Sudoku game session with results (Step 2: PATCH). Requires session ID and start time from create_sudoku_session. End time will be set to current time automatically.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          description: "Session ID from create_sudoku_session",
+        },
+        playerEmail: {
+          type: "string",
+          description: "Email address of the player",
+        },
+        playerName: {
+          type: "string",
+          description: "Display name of the player",
+        },
+        house: {
+          type: "string",
+          description: 'House name (e.g., "Shakti Compliers ")',
+        },
+        startTime: {
+          type: "string",
+          description:
+            "ISO timestamp when game started (from create_sudoku_session)",
+        },
+        difficulty: {
+          type: "string",
+          description: "Puzzle difficulty level",
+        },
+        timeTaken: {
+          type: "number",
+          description: "Time taken in seconds",
+        },
+        completed: {
+          type: "boolean",
+          description: "Whether the puzzle was completed",
+        },
+      },
+      required: ["id", "playerEmail", "playerName", "house", "startTime"],
+    },
+  },
+  {
     name: "submit_sudoku_game",
-    description: "Submit a sudoku game entry for a user",
+    description:
+      "Submit a sudoku game entry for a user (legacy - use create_sudoku_session and update_sudoku_session instead)",
     inputSchema: {
       type: "object",
       properties: {
@@ -258,7 +331,8 @@ const TOOLS: Tool[] = [
   },
   {
     name: "submit_memory_game",
-    description: "Submit a memory game entry for a user",
+    description:
+      "Submit a memory game entry for a user (legacy - use create_memory_session and update_memory_session instead)",
     inputSchema: {
       type: "object",
       properties: {
@@ -276,13 +350,17 @@ const TOOLS: Tool[] = [
             'House name. Must be one of: "Shakti Compliers " (with trailing space), "Karma Debuggers " (with trailing space), "Zen Coders", "Akashic Warriors". Default: "Shakti Compliers "',
           default: "Shakti Compliers ",
         },
-        moves: {
+        triesUsed: {
           type: "number",
-          description: "Number of moves made",
+          description: "Number of tries/attempts used in the game",
         },
-        timeTaken: {
+        matchesFound: {
           type: "number",
-          description: "Time taken in seconds",
+          description: "Number of matches found in the game",
+        },
+        duration: {
+          type: "number",
+          description: "Time taken in seconds (duration of the game)",
         },
         completed: {
           type: "boolean",
@@ -290,6 +368,82 @@ const TOOLS: Tool[] = [
         },
       },
       required: ["playerEmail", "playerName"],
+    },
+  },
+  {
+    name: "create_memory_session",
+    description:
+      "Create a new Memory game session (Step 1: POST). Returns session ID and start time for later updates.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        playerEmail: {
+          type: "string",
+          description: "Email address of the player",
+        },
+        playerName: {
+          type: "string",
+          description: "Display name of the player",
+        },
+        house: {
+          type: "string",
+          description: 'House name (default: "Shakti Compliers ")',
+          default: "Shakti Compliers ",
+        },
+      },
+      required: ["playerEmail", "playerName"],
+    },
+  },
+  {
+    name: "update_memory_session",
+    description:
+      "Update an existing Memory game session with results (Step 2: PATCH). Requires session ID and start time from create_memory_session.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          description: "Session ID from create_memory_session",
+        },
+        playerEmail: {
+          type: "string",
+          description: "Email address of the player",
+        },
+        playerName: {
+          type: "string",
+          description: "Display name of the player",
+        },
+        house: {
+          type: "string",
+          description: 'House name (e.g., "Shakti Compliers ")',
+        },
+        startTime: {
+          type: "string",
+          description:
+            "ISO timestamp when game started (from create_memory_session)",
+        },
+        endTime: {
+          type: "string",
+          description: "ISO timestamp when game ended",
+        },
+        triesUsed: {
+          type: "number",
+          description: "Number of tries/attempts used in the game",
+        },
+        matchesFound: {
+          type: "number",
+          description: "Number of matches found in the game",
+        },
+        duration: {
+          type: "number",
+          description: "Time taken in seconds (duration of the game)",
+        },
+        completed: {
+          type: "boolean",
+          description: "Whether the game was completed",
+        },
+      },
+      required: ["id", "playerEmail", "playerName", "house", "startTime"],
     },
   },
   {
@@ -589,6 +743,31 @@ const TOOLS: Tool[] = [
       ],
     },
   },
+  {
+    name: "get_slack_users",
+    description:
+      "Get list of all Isha Slack workspace users with their UserID, UserName, and RealName. This fetches the complete directory of Slack users from the slack://isha/users resource.",
+    inputSchema: {
+      type: "object",
+      properties: {},
+    },
+  },
+  {
+    name: "get_user_by_email",
+    description:
+      "Get user's house and name details from their email address by querying the All Hearts API endpoint /api/users?email=<email>",
+    inputSchema: {
+      type: "object",
+      properties: {
+        email: {
+          type: "string",
+          description:
+            "Email address of the user (must end with @sadhguru.org)",
+        },
+      },
+      required: ["email"],
+    },
+  },
 ];
 
 // Create MCP server
@@ -758,36 +937,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "submit_typing_game": {
-        // Default game timings for typing
-        const TYPING_START = "2025-11-19T10:00:00.000Z";
-        const TYPING_END = "2025-11-19T11:30:00.000Z";
-
         // IMPORTANT: 98.8% of existing entries use exactly 45 seconds
         // Using different duration would raise suspicion
         const STANDARD_DURATION = 45;
-
-        // Calculate timestamps
-        let startTime = args.startTime as string | undefined;
-        let endTime = args.endTime as string | undefined;
-        const duration = STANDARD_DURATION; // Force 45s to match existing pattern
-
-        if (!startTime) {
-          // Use a random time within the game window
-          const startDate = new Date(TYPING_START);
-          const endDate = new Date(TYPING_END);
-          const randomTime =
-            startDate.getTime() +
-            Math.random() * (endDate.getTime() - startDate.getTime() - 60000); // Leave 1 min buffer
-          startTime = new Date(randomTime).toISOString();
-        }
-
-        if (!endTime) {
-          // Calculate end time based on start time + STANDARD_DURATION (45s)
-          const startDate = new Date(startTime);
-          endTime = new Date(
-            startDate.getTime() + duration * 1000
-          ).toISOString();
-        }
 
         // STEP 1: Create session with POST
         const createData: TypingSessionCreate = {
@@ -798,18 +950,26 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
         const createdSession = await apiClient.createTypingSession(createData);
 
-        // STEP 2: Update session with PATCH
+        // STEP 2: Use the startTime from POST response and calculate endTime
+        // The API returns startTime in the POST response - we MUST use that exact value
+        const startTime = createdSession.startTime!;
+        const startDate = new Date(startTime);
+        const endTime = new Date(
+          startDate.getTime() + STANDARD_DURATION * 1000
+        ).toISOString();
+
+        // STEP 3: Update session with PATCH using the startTime from POST response
         const updateData: TypingSessionUpdate = {
           id: createdSession.id,
           playerEmail: args.playerEmail as string,
           house: (args.house as string) || "Shakti Compliers ",
           name: args.playerName as string,
-          startTime: startTime,
+          startTime: startTime, // Use startTime from POST response
           endTime: endTime,
           bestRound: {
             score: args.wpm as number,
             accuracy: args.accuracy as number,
-            duration: duration,
+            duration: STANDARD_DURATION,
             wpm: args.wpm as number,
           },
         };
@@ -837,32 +997,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "submit_crossword_game": {
-        // Default game timings for crossword
-        const CROSSWORD_START = "2025-11-15T09:55:00.000Z";
-        const CROSSWORD_END = "2025-11-15T11:30:00.000Z";
-
-        // Calculate timestamps
-        let startTime = args.startTime as string | undefined;
-        let endTime = args.endTime as string | undefined;
-
-        if (!startTime) {
-          // Use a random time within the game window
-          const startDate = new Date(CROSSWORD_START);
-          const endDate = new Date(CROSSWORD_END);
-          const randomTime =
-            startDate.getTime() +
-            Math.random() * (endDate.getTime() - startDate.getTime() - 600000); // Leave 10 min buffer
-          startTime = new Date(randomTime).toISOString();
-        }
-
-        if (!endTime && args.timeTaken) {
-          // Calculate end time based on start time + time taken
-          const startDate = new Date(startTime);
-          endTime = new Date(
-            startDate.getTime() + (args.timeTaken as number) * 1000
-          ).toISOString();
-        }
-
         // STEP 1: Create session with POST
         const createData: CrosswordSessionCreate = {
           playerEmail: args.playerEmail as string,
@@ -876,14 +1010,30 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           createData
         );
 
-        // STEP 2: Update session with PATCH
+        // STEP 2: Use the startTime from POST response and calculate endTime
+        // The API returns startTime in the POST response - we MUST use that exact value
+        const startTime = createdSession.startTime!;
+        let endTime: string;
+
+        if (args.timeTaken) {
+          // Calculate end time based on start time + time taken
+          const startDate = new Date(startTime);
+          endTime = new Date(
+            startDate.getTime() + (args.timeTaken as number) * 1000
+          ).toISOString();
+        } else {
+          // Use startTime as fallback if no timeTaken provided
+          endTime = startTime;
+        }
+
+        // STEP 3: Update session with PATCH using the startTime from POST response
         const updateData: CrosswordSessionUpdate = {
           id: createdSession.id,
           playerEmail: args.playerEmail as string,
           house: (args.house as string) || "Shakti Compliers ",
           name: args.playerName as string,
-          startTime: startTime,
-          endTime: endTime || startTime, // Use startTime as fallback
+          startTime: startTime, // Use startTime from POST response
+          endTime: endTime,
           totalWords: args.totalWords as number,
           correctAnswers: (args.correctWords as number) || 0,
           completed: true,
@@ -972,6 +1122,69 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         };
       }
 
+      case "create_sudoku_session": {
+        const data: SudokuSessionCreate = {
+          playerEmail: args.playerEmail as string,
+          house: (args.house as string) || "Shakti Compliers ",
+          playerName: args.playerName as string,
+          gameType: "sudoku" as const,
+        };
+
+        const result = await apiClient.createSudokuSession(data);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  message: "Sudoku session created successfully",
+                  sessionId: result.id,
+                  startTime: result.startTime,
+                  result,
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      case "update_sudoku_session": {
+        const data: SudokuSessionUpdate = {
+          id: args.id as string,
+          playerEmail: args.playerEmail as string,
+          house: args.house as string,
+          name: args.playerName as string,
+          startTime: args.startTime as string,
+          endTime: new Date().toISOString(), // Set endTime to current time
+          difficulty: args.difficulty as string | undefined,
+          timeTaken: args.timeTaken as number | undefined,
+          completed: args.completed as boolean | undefined,
+        };
+
+        const result = await apiClient.updateSudokuSession(data);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  message: "Sudoku session updated successfully",
+                  result,
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
       case "submit_sudoku_game": {
         const submission: SudokuGameSubmission = {
           playerName: args.playerName as string,
@@ -1009,8 +1222,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           playerEmail: args.playerEmail as string,
           house: (args.house as string) || "Shakti Compliers ",
           gameType: "memory" as const,
-          moves: args.moves as number | undefined,
-          timeTaken: args.timeTaken as number | undefined,
+          triesUsed: args.triesUsed as number | undefined,
+          matchesFound: args.matchesFound as number | undefined,
+          duration: args.duration as number | undefined,
           completed: args.completed as boolean | undefined,
         };
 
@@ -1308,6 +1522,164 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             },
           ],
         };
+      }
+
+      case "create_memory_session": {
+        const data: MemorySessionCreate = {
+          playerEmail: args.playerEmail as string,
+          house: (args.house as string) || "Shakti Compliers ",
+          playerName: args.playerName as string,
+          gameType: "memory" as const,
+        };
+
+        const result = await apiClient.createMemorySession(data);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  message: "Memory session created successfully",
+                  sessionId: result.id,
+                  startTime: result.startTime,
+                  result,
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      case "update_memory_session": {
+        const data: MemorySessionUpdate = {
+          id: args.id as string,
+          playerEmail: args.playerEmail as string,
+          house: args.house as string,
+          name: args.playerName as string,
+          startTime: args.startTime as string,
+          endTime: (args.endTime as string) || new Date().toISOString(),
+          triesUsed: args.triesUsed as number | undefined,
+          matchesFound: args.matchesFound as number | undefined,
+          duration: args.duration as number | undefined,
+          completed: args.completed as boolean | undefined,
+        };
+
+        const result = await apiClient.updateMemorySession(data);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  success: true,
+                  message: "Memory session updated successfully",
+                  result,
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      case "get_slack_users": {
+        // Fetch Slack users from the slack://isha/users resource via Slack MCP
+        // This would require calling the Slack MCP server's resource
+        // For now, return a message indicating this needs to be implemented
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  message:
+                    "To fetch Slack users, use the Slack MCP server's resource: slack://isha/users. This tool serves as a reference that the resource is available.",
+                  resourceUri: "slack://isha/users",
+                  note: "Use the read_resource tool from the Slack MCP server to access this data.",
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      case "get_user_by_email": {
+        const email = args.email as string;
+
+        // Validate email format
+        if (!email.endsWith("@sadhguru.org")) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    error: true,
+                    message: "Email must end with @sadhguru.org",
+                    email,
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+            isError: true,
+          };
+        }
+
+        try {
+          // Fetch user data from the API
+          const response = await apiClient.getUserByEmail(email);
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    success: true,
+                    email,
+                    user: response,
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+          };
+        } catch (error: any) {
+          // Handle 404 - user not found
+          if (error.response?.status === 404) {
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify(
+                    {
+                      found: false,
+                      message:
+                        "User not found in the system. Email may not be registered.",
+                      email,
+                    },
+                    null,
+                    2
+                  ),
+                },
+              ],
+            };
+          }
+
+          // Other errors
+          throw error;
+        }
       }
 
       default:
