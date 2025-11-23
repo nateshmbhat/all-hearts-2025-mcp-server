@@ -1,61 +1,46 @@
 # Akashic Warriors - Team Members
 
-## Complete Member List with Slack User IDs
+## Captain
+**Swathi Yegireddi** - swathi.yegireddi@sadhguru.org
 
-1. **Abhishek Vijeta** (M) - abhishek.vijeta@sadhguru.org - `U04AHLFJXM0`
-2. **Adithya Ranganath Poyyamozhi** (M) - adithya.ranganathpoyy@sadhguru.org - `U08M1ES4UCB`
-3. **Akshay Shrivastava** (M) - akshay.shrivastava@sadhguru.org - `U02BF883JLA`
-4. **Amee Thaker** (F) - amee.thaker@sadhguru.org - `U03SPQSDSCU`
-5. **Anusha V** (F) - anusha.v@sadhguru.org - `U05GJDLQNL9`
-6. **Arunkumar Mani** (M) - arunkumar.mani@sadhguru.org - `U08NWPNSDGD`
-7. **Ashank Bharati** (M) - ashank.bharathi@sadhguru.org - `U07N6HV9075`
-8. **Atul Krishnan** (M) - atul.krishnan@sadhguru.org - `U07L887LS5C`
-9. **Bhavya Dangayach** (F) - bhavya.dangayach@sadhguru.org - `U07F28EBQU8`
-10. **Bikash Regmi** (M) - bikash.regmi@sadhguru.org - `U02837GFCTY`
-11. **Chandrasekhar Balasubramanian** (M) - chandrasekhar.balasub@sadhguru.org - `U069UMG0J4D`
-12. **Deekshat Hastantram** (F) - deeksha.hastantram@sadhguru.org - `U07CCH0644S`
-13. **Deepsagar Sahu** (M) - deepsagar.sahu@sadhguru.org - `U07GPKAUY83`
-14. **Diego Arteaga** (M) - diego.arteaga@sadhguru.org - `U056L629PBL`
-15. **Diker Pagui** (M) - diker.pagui440@sadhguru.org - `U07EVKZSRPA`
-16. **Gayatri Nalinde** (F) - gayatri.nalinde@sadhguru.org - `U09DL338MNC`
-17. **Gontina Kaushlendra Rao** (M) - gontina.kaushlendrara@sadhguru.org - `U05GHTBJ7LJ`
-18. **Kakshil Shah** (M) - kakshil.shah@sadhguru.org - `U071HPU1WJV`
-19. **Kalaiselvi Lakshmanan** (F) - kalaiselvi.lakshmanan@sadhguru.org - `U03AB99M1B8`
-20. **Kathir Subramaniam** (M) - kathi.subramaniam@sadhguru.org - `U09C72K3QAK`
-21. **Koushik Ghosh** (M) - koushik.ghosh@sadhguru.org - `U096MC2DZJB`
-22. **Madhusudhan Yadav** (M) - madhusudan.yadav@sadhguru.org - `U07DYLDU0LF`
-23. **Manikandan Vidyasekharan** (M) - manikandan.vidyase371@sadhguru.org - `U07EVL139HN`
-24. **Nabil Ramadan** (M) - nabil.ramadan@sadhguru.org - `U06D9VBNM8U`
-25. **Nandhini Anand** (F) - nandhini.anand@sadhguru.org - `U01RAHURABG`
-26. **Neel Pithava** (M) - neel.pithava@sadhguru.org - `U05GXAY6GBA`
-27. **Nitin Agrawal** (M) - nitin.agrawal@sadhguru.org - `U06J96YMACQ`
-28. **Pallavi Dhamdhere** (F) - pallavi.dhamdhere709@sadhguru.org - `U07NHJ0PYDT`
-29. **Phanisowjanya Vutukur** (F) - phanisowjanya.vutukur@sadhguru.org - `U03Q5CCNHQF`
-30. **Praveen Raj** (M) - praveen.raj268@sadhguru.org - `U07DS9QS0JK`
-31. **Priyo Nayak** (M) - priyo.nayak@sadhguru.org - `U07BD7GQCLS`
-32. **Raghavendra Puranik** (M) - raghavendra.puranik@sadhguru.org - `U06GBKXAJ2Z`
-33. **Rahul Sharma** (M) - rahul.sharma@sadhguru.org - `U09B77KRML5`
-34. **Rakshith Shivanna** (M) - rakshith.shivanna@sadhguru.org - `U07SG9HHAMU`
-35. **Raviraj Gardi** (M) - raviraj.gardi@sadhguru.org - `U07GTDMEUKB`
-36. **Sameer Joshi** (M) - sameer.joshi@sadhguru.org - `U07GXCQ3BNC`
-37. **Sangeetha Priya** (F) - sangeetha.priya@sadhguru.org - `U093NCNCB38`
-38. **Senthilkumar Subramanian** (M) - senthilkumar.subraman@sadhguru.org - `U06UGME5P0B`
-39. **Shimon Stegelmann** (M) - shimon.stegelmann@sadhguru.org - `U08LU2EGQ84`
-40. **Shubhajit Kushari** (M) - shubhajit.kushari530@sadhguru.org - `U07TGAWTH25`
-41. **Smarak Mishra** (M) - smarak.mishra@sadhguru.org - `U077XBFUJU8`
-42. **Sreenivasulu Battula** (M) - sreenivasulu.battula@sadhguru.org - `U06BEUWDU5B`
-43. **Sruthi Sadavrath** (F) - sruthi.sadavrath@sadhguru.org - `U09GF3BDLJC`
-44. **Sunil Mangathil** (M) - sunil.mangathil@sadhguru.org - `U02E0CU7NTG`
-45. **Swami Sukhada** (F) - swami.sukhada@sadhguru.org - `U08EN8JN19T`
-46. **Swathi Yegireddi** (F) - swathi.yegireddi@sadhguru.org - `U03QNCR41HA`
-47. **Tanya Pandey** (F) - tanya.pandey@sadhguru.org - `U08PX1K8PUJ`
-48. **Thrisha Swamy** (F) - thrisha.swamy@sadhguru.org - `U090D0WN6KV`
-49. **Venkatesh Sambaiah** (M) - venkatesh.sambaiah@sadhguru.org - `U073UFD2R1A`
-50. **Vishal Kendre** (M) - vishal.kendre@sadhguru.org - `U06JDRACZU5`
-51. **Yaswanth Myneni** (M) - yaswanth.myneni@sadhguru.org - `U07ERT1KBT3`
-52. **Yingying Zhou** (F) - yingying.zhou@sadhguru.org - `U072NDPR4KA`
+## ⚠️ Important Note
+This list contains **actual game participants** (verified from game sessions across Crossword, Wordle, and Typing games). The previous member list was based on Slack directory data which did not match actual participants.
+
+**Total Active Participants:** 34 members
+
+## Complete Member List (Alphabetically by Email)
+
+1. **Andreas Triebl** - andreas.triebl@sadhguru.org
+2. **Arunraj R** - arunraj.ragavan@sadhguru.org
+3. **Dhruvil Shah** - dhruvil.shah-ext@sadhguru.org
+4. **Gorla Giridhar Reddy** - giri.dhar@sadhguru.org
+5. **Gnana Abirami** - gnana.abirami@sadhguru.org
+6. **Jothi Krishna** - jothi.krishna@sadhguru.org
+7. **Saraswathi Krishna Tulasi** - krishnatulasi.saraswathi-ext@sadhguru.org
+8. **Saraswathi Krishna Tulasi** - krishnatulasi.saraswathi@sadhguru.org
+9. **Malyala Kruthika** - kruthika.malyala@sadhguru.org
+10. **Manjuladevi Yuvraj** - manjuladevi.yuvaraj@sadhguru.org
+11. **Mano Balaji M** - manobalaji.m@sadhguru.org
+12. **Priteesh Neema** - priteesh.neema@sadhguru.org
+13. **Rahul Devaliya** - rahul.devaliya@sadhguru.org
+14. **Samarth Gupta** - samarth.gupta@sadhguru.org
+15. **Sathish Kumar Raja C** - sathishkumar.raja@sadhguru.org
+16. **Shruti Chauhan** - shruti.chauhan-ext@sadhguru.org
+17. **Shweta Akhare** - shweta.akhare@sadhguru.org
+18. **Bodicherla Sireesha** - sireesha.vijay@sadhguru.org
+19. **E Sridhar** - sridhar.eswaran@sadhguru.org
+20. **Sriman M** - sriman.manoharan@sadhguru.org
+21. **Sutharson Mathialagan** - sutharson.mathialagan@sadhguru.org
+22. **Swathi Yegireddi** (Captain) - swathi.yegireddi@sadhguru.org
+23. **Thangaraj J** - thangaraj.j@sadhguru.org
+24. **Vasudha Sri Sahithi** - vasudha.srisahithi@sadhguru.org
+25. **Venkateswarlu Ravula** - venkateswarlu.ravu-ext@sadhguru.org
+26. **Utti Vyshnavi** - vyshnavi.utti@sadhguru.org
+27. **Yasasree Dronadula** - yasasree.dronadula-ext@sadhguru.org
+28. **Yashkumar Jesingbhai Vala** - yash.vala@sadhguru.org
 
 ## Notes
 
-- Total team members: **52**
-- All members found in Slack user directory
+- Total active participants: **34** (including 2 duplicate entries for Krishna Tulasi with different email formats)
+- Data verified from actual game sessions (Crossword, Wordle, Typing)
+- Previous list had 52 members from Slack directory who did not match actual participants

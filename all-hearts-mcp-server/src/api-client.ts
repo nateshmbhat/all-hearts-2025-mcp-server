@@ -74,15 +74,9 @@ export class AllHeartsAPIClient {
   async submitTypingGame(
     submission: TypingGameSubmission
   ): Promise<GameSession> {
-    const encryptedData = encryptData(submission);
     const response = await this.client.patch<GameSession>(
       "/api/games/typing/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      submission
     );
     return response.data;
   }
@@ -91,15 +85,9 @@ export class AllHeartsAPIClient {
    * Create a new typing game session (Step 1: POST)
    */
   async createTypingSession(data: TypingSessionCreate): Promise<GameSession> {
-    const encryptedData = encryptData(data);
     const response = await this.client.post<GameSession>(
       "/api/games/typing/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      data
     );
     return response.data;
   }
@@ -108,15 +96,9 @@ export class AllHeartsAPIClient {
    * Update an existing typing game session (Step 2: PATCH)
    */
   async updateTypingSession(data: TypingSessionUpdate): Promise<GameSession> {
-    const encryptedData = encryptData(data);
     const response = await this.client.patch<GameSession>(
       "/api/games/typing/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      data
     );
     return response.data;
   }
@@ -127,15 +109,9 @@ export class AllHeartsAPIClient {
   async submitCrosswordGame(
     submission: CrosswordGameSubmission
   ): Promise<GameSession> {
-    const encryptedData = encryptData(submission);
     const response = await this.client.post<GameSession>(
       "/api/games/crossword/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      submission
     );
     return response.data;
   }
@@ -146,15 +122,9 @@ export class AllHeartsAPIClient {
   async createCrosswordSession(
     data: CrosswordSessionCreate
   ): Promise<GameSession> {
-    const encryptedData = encryptData(data);
     const response = await this.client.post<GameSession>(
       "/api/games/crossword/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      data
     );
     return response.data;
   }
@@ -165,15 +135,9 @@ export class AllHeartsAPIClient {
   async updateCrosswordSession(
     data: CrosswordSessionUpdate
   ): Promise<GameSession> {
-    const encryptedData = encryptData(data);
     const response = await this.client.patch<GameSession>(
       "/api/games/crossword/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      data
     );
     return response.data;
   }
@@ -184,15 +148,9 @@ export class AllHeartsAPIClient {
   async submitWordleGame(
     submission: WordleGameSubmission
   ): Promise<GameSession> {
-    const encryptedData = encryptData(submission);
     const response = await this.client.post<GameSession>(
       "/api/games/wordle/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      submission
     );
     return response.data;
   }
@@ -201,15 +159,9 @@ export class AllHeartsAPIClient {
    * Create a new Wordle game session (Step 1: POST)
    */
   async createWordleSession(data: WordleSessionCreate): Promise<GameSession> {
-    const encryptedData = encryptData(data);
     const response = await this.client.post<GameSession>(
       "/api/games/wordle/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      data
     );
     return response.data;
   }
@@ -218,15 +170,9 @@ export class AllHeartsAPIClient {
    * Update an existing Wordle game session (Step 2: PATCH)
    */
   async updateWordleSession(data: WordleSessionUpdate): Promise<GameSession> {
-    const encryptedData = encryptData(data);
     const response = await this.client.patch<GameSession>(
       "/api/games/wordle/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
+      data
     );
     return response.data;
   }

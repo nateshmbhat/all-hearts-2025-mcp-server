@@ -820,14 +820,43 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                   game,
                   house: house || "all",
                   totalParticipants: participants.length,
-                  participants: participants.map((p) => ({
-                    email: p.playerEmail,
-                    name: p.playerName,
-                    house: p.house,
-                    score: p.score || p.bestScore,
-                    accuracy: p.accuracy || p.bestAccuracy,
-                    completed: p.completed,
-                  })),
+                  participants: participants.map((p) => {
+                    // Return all fields from the session, filtering out undefined values
+                    const result: any = {
+                      sessionId: p.id,
+                      playerEmail: p.playerEmail,
+                      playerName: p.playerName,
+                      house: p.house,
+                      completed: p.completed,
+                    };
+
+                    // Add optional fields only if they exist
+                    if (p.gameType !== undefined) result.gameType = p.gameType;
+                    if (p.startTime !== undefined)
+                      result.startTime = p.startTime;
+                    if (p.endTime !== undefined) result.endTime = p.endTime;
+                    if (p.score !== undefined) result.score = p.score;
+                    if (p.bestScore !== undefined)
+                      result.bestScore = p.bestScore;
+                    if (p.bestAccuracy !== undefined)
+                      result.bestAccuracy = p.bestAccuracy;
+                    if (p.duration !== undefined) result.duration = p.duration;
+                    if (p.timeTaken !== undefined)
+                      result.timeTaken = p.timeTaken;
+                    if (p.wpm !== undefined) result.wpm = p.wpm;
+                    if (p.accuracy !== undefined) result.accuracy = p.accuracy;
+                    if (p.attempts !== undefined) result.attempts = p.attempts;
+                    if (p.totalWords !== undefined)
+                      result.totalWords = p.totalWords;
+                    if (p.correctWords !== undefined)
+                      result.correctWords = p.correctWords;
+                    if (p.correctAnswers !== undefined)
+                      result.correctAnswers = p.correctAnswers;
+                    if (p.wordsSolved !== undefined)
+                      result.wordsSolved = p.wordsSolved;
+
+                    return result;
+                  }),
                 },
                 null,
                 2
