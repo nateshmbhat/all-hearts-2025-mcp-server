@@ -1,91 +1,93 @@
 # All Hearts 2025 MCP Server
 
-An MCP (Model Context Protocol) server that wraps the All Hearts 2025 games API endpoints.
+An **MCP (Model Context Protocol) server** that enables AI assistants (Claude, Windsurf, etc.) to interact with a multi-game competition platform for organizational events. Built with TypeScript using the `@modelcontextprotocol/sdk`.
 
-## Features
+---
 
-This MCP server provides the following tools:
+## 🎯 Use Cases Enabled by This MCP
 
-### 1. `get_game_participants`
-Get list of all participants for a specific game, optionally filtered by house.
+1. **AI-Powered Game Coaching** - AI can check participation and remind non-participants
+2. **Automated Score Submission** - Submit game results via natural language
+3. **Real-Time Leaderboard Queries** - "How is my team doing?" → instant stats
+4. **Participation Monitoring** - "Who hasn't played the typing game yet?"
+5. **Player Performance Tracking** - "What's my rank?" → detailed breakdown
+6. **Event Coordination** - Check game windows, send reminders based on timing
 
-**Parameters:**
-- `game` (required): One of "crossword", "wordle", "typing", "sudoku", "memory"
-- `house` (optional): House name to filter by (e.g., "Shakti Compliers ")
+---
 
-**Returns:** JSON with participant details including email, name, house, score, and completion status.
+## 🎮 Core Features
 
-### 2. `get_non_participants`
-Get list of people who have not yet submitted any entry for a particular game.
+### Multi-Game Support
+Supports 5 game types: **Crossword**, **Wordle**, **Typing**, **Sudoku**, and **Memory**.
 
-**Parameters:**
-- `game` (required): One of "crossword", "wordle", "typing", "sudoku", "memory"
-- `house` (optional): House name to filter by (e.g., "Shakti Compliers ")
+### Participation Tracking
+| Tool | Description |
+|------|-------------|
+| `get_game_participants` | Retrieve all participants for any game, filterable by house/team |
+| `get_non_participants` | Identify team members who haven't played yet (with built-in team roster) |
 
-**Returns:** JSON with non-participant emails and participation statistics.
+### Game Session Management (Two-Step Flow)
+Each game supports a create → update workflow for precise session control:
 
-### 3. `submit_typing_game`
-Submit a typing game entry for a user.
+| Game | Create Tool | Update Tool |
+|------|-------------|-------------|
+| Typing | `create_typing_session` | `update_typing_session` |
+| Crossword | `create_crossword_session` | `update_crossword_session` |
+| Wordle | `create_wordle_session` | `update_wordle_session` |
+| Sudoku | `create_sudoku_session` | `update_sudoku_session` |
+| Memory | `create_memory_session` | `update_memory_session` |
 
-**Parameters:**
-- `playerEmail` (required): Email address of the player
-- `playerName` (required): Display name of the player
-- `house` (optional): House name (default: "Shakti Compliers ")
-- `wpm` (required): Words per minute score
-- `accuracy` (required): Accuracy percentage (0-100)
-- `duration` (optional): Test duration in seconds (default: 30)
+### Legacy Submit Tools
+One-shot submission for backward compatibility: `submit_typing_game`, `submit_crossword_game`, `submit_wordle_game`, `submit_sudoku_game`
 
-### 4. `submit_crossword_game`
-Submit a crossword game entry for a user.
+### Leaderboard & Analytics
+| Tool | Description |
+|------|-------------|
+| `get_house_standings` | All houses ranked by total points with per-game breakdown |
+| `get_house_details` | Detailed stats for a specific house |
+| `get_top_players` | Top N players overall or filtered by house |
+| `get_player_rank` | Individual player's rank, total score, and per-game scores |
+| `get_game_leaderboard` | Top performers for a specific game |
 
-**Parameters:**
-- `playerEmail` (required): Email address of the player
-- `playerName` (required): Display name of the player
-- `house` (optional): House name (default: "Shakti Compliers ")
-- `totalWords` (required): Total number of words in crossword
-- `correctWords` (optional): Number of correct words
-- `timeTaken` (optional): Time taken in seconds
+### Utility Tools
+| Tool | Description |
+|------|-------------|
+| `get_game_timings` | Retrieve start/end times for all games (UTC & IST) |
+| `get_session_id` | Retrieve existing session ID by player email |
+| `get_user_by_email` | Get user's house and name from email address |
+| `get_slack_users` | Fetch Slack workspace user directory |
 
-### 5. `submit_wordle_game`
-Submit a wordle game entry for a user.
+### Security
+- **AES Encryption** for sensitive game submissions (Sudoku uses encrypted payloads)
+- Encryption key management via CryptoJS
 
-**Parameters:**
-- `playerEmail` (required): Email address of the player
-- `playerName` (required): Display name of the player
-- `house` (optional): House name (default: "Shakti Compliers ")
-- `attempts` (optional): Number of attempts
-- `solved` (optional): Whether puzzle was solved
-- `guesses` (optional): Array of guessed words
+---
 
-### 6. `submit_sudoku_game`
-Submit a sudoku game entry for a user.
+## 📦 Technical Stack
 
-**Parameters:**
-- `playerEmail` (required): Email address of the player
-- `playerName` (required): Display name of the player
-- `house` (optional): House name (default: "Shakti Compliers ")
-- `difficulty` (optional): Difficulty level
-- `timeTaken` (optional): Time taken in seconds
-- `completed` (optional): Whether puzzle was completed
+| Component | Technology |
+|-----------|------------|
+| Runtime | Node.js (ES Modules) |
+| Language | TypeScript |
+| MCP SDK | `@modelcontextprotocol/sdk` v1.0.4 |
+| HTTP Client | Axios |
+| Encryption | CryptoJS (AES) |
+| Transport | stdio (standard MCP transport) |
 
-### 7. `submit_memory_game`
-Submit a memory game entry for a user.
+---
 
-**Parameters:**
-- `playerEmail` (required): Email address of the player
-- `playerName` (required): Display name of the player
-- `house` (optional): House name (default: "Shakti Compliers ")
-- `triesUsed` (optional): Number of tries/attempts used in the game
-- `matchesFound` (optional): Number of matches found in the game
-- `duration` (optional): Time taken in seconds (duration of the game)
-- `completed` (optional): Whether game was completed
+## 🚀 Key Differentiators
 
-### 8. `get_game_timings`
-Get timing information for all games (start and end times).
+1. **Full CRUD for Game Sessions** - Not just read-only; can create and update game data
+2. **Multi-House Support** - 4 competing houses with individual tracking
+3. **Intelligent Non-Participant Detection** - Compares against known team rosters
+4. **Dual Submission Modes** - Two-step (create/update) and one-shot (legacy) patterns
+5. **Encrypted Payloads** - Security-conscious design for sensitive games
+6. **26 MCP Tools** - Comprehensive coverage of the game platform's functionality
 
-**Returns:** JSON with start/end times for all games in both UTC and IST.
+---
 
-## Installation
+## 🛠 Installation
 
 ```bash
 cd all-hearts-mcp-server
@@ -93,19 +95,9 @@ npm install
 npm run build
 ```
 
-## Development
-
-```bash
-# Watch mode for development
-npm run watch
-
-# Run in development mode with tsx
-npm run dev
-```
-
 ## Configuration
 
-Add this to your MCP client configuration (e.g., Claude Desktop):
+Add this to your MCP client configuration (e.g., Claude Desktop, Windsurf):
 
 ```json
 {
@@ -118,42 +110,20 @@ Add this to your MCP client configuration (e.g., Claude Desktop):
 }
 ```
 
-Or use npx after publishing:
+---
 
-```json
-{
-  "mcpServers": {
-    "all-hearts": {
-      "command": "npx",
-      "args": ["all-hearts-mcp-server"]
-    }
-  }
-}
-```
-
-## API Base URL
-
-The server connects to: `https://all-hearts-2025-games.netlify.app`
-
-## Important Notes
-
-- **House Name**: The house name "Shakti Compliers " includes a trailing space - this is intentional and matches the API!
-- **Team Size**: The Shakti Compliers team has 61 members (as listed in `team-members.ts`)
-- **Game Types**: Supported games are: crossword, wordle, typing, sudoku, memory
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 all-hearts-mcp-server/
 ├── src/
-│   ├── index.ts          # Main MCP server implementation
-│   ├── api-client.ts     # API client wrapper
+│   ├── index.ts          # Main MCP server (26 tools)
+│   ├── api-client.ts     # API client with encryption
 │   ├── types.ts          # TypeScript types
-│   └── team-members.ts   # Shakti Compliers team list
-├── dist/                 # Compiled JavaScript (generated)
+│   └── team-members.ts   # Team roster for participation tracking
+├── dist/                 # Compiled JavaScript
 ├── package.json
-├── tsconfig.json
-└── README.md
+└── tsconfig.json
 ```
 
 ## License
