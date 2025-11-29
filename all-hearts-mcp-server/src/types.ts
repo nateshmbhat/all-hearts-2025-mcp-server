@@ -190,17 +190,6 @@ export interface SudokuSessionUpdate {
 }
 
 // Memory game specific types
-export interface MemoryGameSubmission {
-  playerName: string;
-  playerEmail: string;
-  house: string;
-  gameType: "memory";
-  triesUsed?: number;
-  matchesFound?: number;
-  duration?: number;
-  completed?: boolean;
-}
-
 export interface MemorySessionCreate {
   playerEmail: string;
   house: string;
@@ -217,6 +206,52 @@ export interface MemorySessionUpdate {
   endTime: string;
   triesUsed?: number;
   matchesFound?: number;
-  duration?: number;
+  score?: number;
   completed?: boolean;
+}
+
+// Leaderboard types
+export type LeaderboardGameType =
+  | "crossword"
+  | "wordle"
+  | "typing"
+  | "memory"
+  | "mystery";
+
+export interface GameBreakdown {
+  points: number;
+  participants: number;
+}
+
+export interface HouseScore {
+  houseId: string;
+  totalPoints: number;
+  totalGames: number;
+  totalPlayers: number;
+  averageScore: number;
+  breakdown: Record<LeaderboardGameType, GameBreakdown>;
+}
+
+export interface PlayerGameScore {
+  score: number;
+  duration: number;
+  solvedCount?: number;
+}
+
+export interface LeaderboardEntry {
+  id: string;
+  playerName: string;
+  playerEmail: string;
+  house: string;
+  totalScore: number;
+  crossword?: PlayerGameScore;
+  wordle?: PlayerGameScore;
+  typing?: PlayerGameScore;
+  memory?: PlayerGameScore;
+  mystery?: PlayerGameScore;
+}
+
+export interface LeaderboardResponse {
+  houseScores: HouseScore[];
+  leaderboardEntries: LeaderboardEntry[];
 }

@@ -31,9 +31,11 @@ import {
   SudokuGameSubmission,
   SudokuSessionCreate,
   SudokuSessionUpdate,
-  MemoryGameSubmission,
   MemorySessionCreate,
   MemorySessionUpdate,
+  LeaderboardGameType,
+  HouseScore,
+  LeaderboardEntry,
 } from "./types.js";
 
 // Initialize API client
@@ -330,47 +332,6 @@ const TOOLS: Tool[] = [
     },
   },
   {
-    name: "submit_memory_game",
-    description:
-      "Submit a memory game entry for a user (legacy - use create_memory_session and update_memory_session instead)",
-    inputSchema: {
-      type: "object",
-      properties: {
-        playerEmail: {
-          type: "string",
-          description: "Email address of the player",
-        },
-        playerName: {
-          type: "string",
-          description: "Display name of the player",
-        },
-        house: {
-          type: "string",
-          description:
-            'House name. Must be one of: "Shakti Compliers " (with trailing space), "Karma Debuggers " (with trailing space), "Zen Coders", "Akashic Warriors". Default: "Shakti Compliers "',
-          default: "Shakti Compliers ",
-        },
-        triesUsed: {
-          type: "number",
-          description: "Number of tries/attempts used in the game",
-        },
-        matchesFound: {
-          type: "number",
-          description: "Number of matches found in the game",
-        },
-        duration: {
-          type: "number",
-          description: "Time taken in seconds (duration of the game)",
-        },
-        completed: {
-          type: "boolean",
-          description: "Whether the game was completed",
-        },
-      },
-      required: ["playerEmail", "playerName"],
-    },
-  },
-  {
     name: "create_memory_session",
     description:
       "Create a new Memory game session (Step 1: POST). Returns session ID and start time for later updates.",
@@ -434,16 +395,23 @@ const TOOLS: Tool[] = [
           type: "number",
           description: "Number of matches found in the game",
         },
-        duration: {
+        score: {
           type: "number",
-          description: "Time taken in seconds (duration of the game)",
+          description: "Score calculated for the game",
         },
         completed: {
           type: "boolean",
           description: "Whether the game was completed",
         },
       },
-      required: ["id", "playerEmail", "playerName", "house", "startTime"],
+      required: [
+        "id",
+        "playerEmail",
+        "playerName",
+        "house",
+        "startTime",
+        "endTime",
+      ],
     },
   },
   {
@@ -766,6 +734,93 @@ const TOOLS: Tool[] = [
         },
       },
       required: ["email"],
+    },
+  },
+  // Leaderboard tools
+  {
+    name: "get_house_standings",
+    description:
+      "Get all houses ranked by total points with breakdown per game. Returns house rankings sorted by total points.",
+    inputSchema: {
+      type: "object",
+      properties: {},
+    },
+  },
+  {
+    name: "get_house_details",
+    description:
+      "Get detailed stats for a specific house including total points, participants, and per-game breakdown.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        house: {
+          type: "string",
+          description:
+            'House name (e.g., "Shakti Compliers", "Zen Coders", "Karma Debuggers", "Akashic Warriors")',
+        },
+      },
+      required: ["house"],
+    },
+  },
+  {
+    name: "get_top_players",
+    description:
+      "Get top N players overall or filtered by house. Returns players ranked by total score.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        house: {
+          type: "string",
+          description:
+            'Optional house name to filter by (e.g., "Shakti Compliers")',
+        },
+        limit: {
+          type: "number",
+          description: "Maximum number of players to return (default: 25)",
+          default: 25,
+        },
+      },
+    },
+  },
+  {
+    name: "get_player_rank",
+    description:
+      "Get a specific player's rank and scores by email. Returns player's overall rank, total score, and per-game scores.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        playerEmail: {
+          type: "string",
+          description: "Email address of the player",
+        },
+      },
+      required: ["playerEmail"],
+    },
+  },
+  {
+    name: "get_game_leaderboard",
+    description:
+      "Get top performers for a specific game (crossword/wordle/typing/memory/mystery). Returns players ranked by score for that game.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        game: {
+          type: "string",
+          enum: ["crossword", "wordle", "typing", "memory", "mystery"],
+          description: "The game to get leaderboard for",
+        },
+        house: {
+          type: "string",
+          description:
+            'Optional house name to filter by (e.g., "Shakti Compliers")',
+        },
+        limit: {
+          type: "number",
+          description: "Maximum number of players to return (default: 25)",
+          default: 25,
+        },
+      },
+      required: ["game"],
     },
   },
 ];
@@ -1245,38 +1300,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         };
       }
 
-      case "submit_memory_game": {
-        const submission: MemoryGameSubmission = {
-          playerName: args.playerName as string,
-          playerEmail: args.playerEmail as string,
-          house: (args.house as string) || "Shakti Compliers ",
-          gameType: "memory" as const,
-          triesUsed: args.triesUsed as number | undefined,
-          matchesFound: args.matchesFound as number | undefined,
-          duration: args.duration as number | undefined,
-          completed: args.completed as boolean | undefined,
-        };
-
-        const result = await apiClient.submitMemoryGame(submission);
-
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  success: true,
-                  message: "Memory game submission successful",
-                  result,
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      }
-
       case "create_typing_session": {
         const data = {
           playerEmail: args.playerEmail as string,
@@ -1590,10 +1613,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           house: args.house as string,
           name: args.playerName as string,
           startTime: args.startTime as string,
-          endTime: (args.endTime as string) || new Date().toISOString(),
+          endTime: args.endTime as string,
           triesUsed: args.triesUsed as number | undefined,
           matchesFound: args.matchesFound as number | undefined,
-          duration: args.duration as number | undefined,
+          score: args.score as number | undefined,
           completed: args.completed as boolean | undefined,
         };
 
@@ -1709,6 +1732,289 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           // Other errors
           throw error;
         }
+      }
+
+      // Leaderboard tool handlers
+      case "get_house_standings": {
+        const leaderboard = await apiClient.getLeaderboard();
+        const houseScores = leaderboard.houseScores.sort(
+          (a, b) => b.totalPoints - a.totalPoints
+        );
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  standings: houseScores.map((house, index) => ({
+                    rank: index + 1,
+                    house: house.houseId,
+                    totalPoints: house.totalPoints,
+                    totalParticipants: house.totalPlayers,
+                    breakdown: house.breakdown,
+                  })),
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      case "get_house_details": {
+        const houseName = args.house as string;
+        const leaderboard = await apiClient.getLeaderboard();
+
+        // Find the house (case-insensitive partial match)
+        const house = leaderboard.houseScores.find((h) =>
+          h.houseId.toLowerCase().includes(houseName.toLowerCase())
+        );
+
+        if (!house) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    error: true,
+                    message: `House "${houseName}" not found`,
+                    availableHouses: leaderboard.houseScores.map(
+                      (h) => h.houseId
+                    ),
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+            isError: true,
+          };
+        }
+
+        // Calculate rank
+        const sortedHouses = leaderboard.houseScores.sort(
+          (a, b) => b.totalPoints - a.totalPoints
+        );
+        const rank =
+          sortedHouses.findIndex((h) => h.houseId === house.houseId) + 1;
+
+        // Get players from this house
+        const housePlayers = leaderboard.leaderboardEntries
+          .filter((p) =>
+            p.house.toLowerCase().includes(houseName.toLowerCase())
+          )
+          .sort((a, b) => b.totalScore - a.totalScore);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  house: house.houseId,
+                  rank,
+                  totalPoints: house.totalPoints,
+                  totalParticipants: house.totalPlayers,
+                  averageScore: house.averageScore,
+                  breakdown: house.breakdown,
+                  topPlayers: housePlayers.slice(0, 10).map((p, i) => ({
+                    rank: i + 1,
+                    playerName: p.playerName,
+                    playerEmail: p.playerEmail,
+                    totalScore: p.totalScore,
+                  })),
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      case "get_top_players": {
+        const house = args.house as string | undefined;
+        const limit = (args.limit as number) || 25;
+
+        const leaderboard = await apiClient.getLeaderboard();
+        let players = leaderboard.leaderboardEntries.sort(
+          (a, b) => b.totalScore - a.totalScore
+        );
+
+        if (house) {
+          players = players.filter((p) =>
+            p.house.toLowerCase().includes(house.toLowerCase())
+          );
+        }
+
+        const topPlayers = players.slice(0, limit);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  filter: house || "all",
+                  totalPlayers: players.length,
+                  showing: topPlayers.length,
+                  players: topPlayers.map((p, index) => ({
+                    rank: index + 1,
+                    playerName: p.playerName,
+                    playerEmail: p.playerEmail,
+                    house: p.house,
+                    totalScore: p.totalScore,
+                    games: {
+                      crossword: p.crossword?.score,
+                      wordle: p.wordle?.score,
+                      typing: p.typing?.score,
+                      memory: p.memory?.score,
+                      mystery: p.mystery?.score,
+                    },
+                  })),
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      case "get_player_rank": {
+        const playerEmail = args.playerEmail as string;
+        const leaderboard = await apiClient.getLeaderboard();
+
+        // Sort all players by total score
+        const sortedPlayers = leaderboard.leaderboardEntries.sort(
+          (a, b) => b.totalScore - a.totalScore
+        );
+
+        // Find the player (case-insensitive)
+        const playerIndex = sortedPlayers.findIndex(
+          (p) => p.playerEmail.toLowerCase() === playerEmail.toLowerCase()
+        );
+
+        if (playerIndex === -1) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    found: false,
+                    message: `Player "${playerEmail}" not found in leaderboard`,
+                    playerEmail,
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+          };
+        }
+
+        const player = sortedPlayers[playerIndex];
+        const overallRank = playerIndex + 1;
+
+        // Calculate house rank
+        const housePlayers = sortedPlayers.filter(
+          (p) => p.house === player.house
+        );
+        const houseRank =
+          housePlayers.findIndex(
+            (p) => p.playerEmail.toLowerCase() === playerEmail.toLowerCase()
+          ) + 1;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  found: true,
+                  playerName: player.playerName,
+                  playerEmail: player.playerEmail,
+                  house: player.house,
+                  overallRank,
+                  houseRank,
+                  totalPlayersOverall: sortedPlayers.length,
+                  totalPlayersInHouse: housePlayers.length,
+                  totalScore: player.totalScore,
+                  gameScores: {
+                    crossword: player.crossword || null,
+                    wordle: player.wordle || null,
+                    typing: player.typing || null,
+                    memory: player.memory || null,
+                    mystery: player.mystery || null,
+                  },
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      case "get_game_leaderboard": {
+        const game = args.game as LeaderboardGameType;
+        const house = args.house as string | undefined;
+        const limit = (args.limit as number) || 25;
+
+        const leaderboard = await apiClient.getLeaderboard();
+
+        // Filter players who have played this game
+        let players = leaderboard.leaderboardEntries.filter((p) => {
+          const gameScore = p[game];
+          return gameScore && gameScore.score !== undefined;
+        });
+
+        // Filter by house if specified
+        if (house) {
+          players = players.filter((p) =>
+            p.house.toLowerCase().includes(house.toLowerCase())
+          );
+        }
+
+        // Sort by game score
+        players = players.sort((a, b) => {
+          const scoreA = a[game]?.score || 0;
+          const scoreB = b[game]?.score || 0;
+          return scoreB - scoreA;
+        });
+
+        const topPlayers = players.slice(0, limit);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  game,
+                  filter: house || "all",
+                  totalPlayers: players.length,
+                  showing: topPlayers.length,
+                  players: topPlayers.map((p, index) => ({
+                    rank: index + 1,
+                    playerName: p.playerName,
+                    playerEmail: p.playerEmail,
+                    house: p.house,
+                    score: p[game]?.score,
+                    duration: p[game]?.duration,
+                    solvedCount: p[game]?.solvedCount,
+                  })),
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
       }
 
       default:

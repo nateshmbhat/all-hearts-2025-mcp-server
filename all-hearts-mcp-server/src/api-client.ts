@@ -20,9 +20,9 @@ import {
   SudokuGameSubmission,
   SudokuSessionCreate,
   SudokuSessionUpdate,
-  MemoryGameSubmission,
   MemorySessionCreate,
   MemorySessionUpdate,
+  LeaderboardResponse,
 } from "./types.js";
 
 const BASE_URL = "https://all-hearts-2025-games.netlify.app";
@@ -231,32 +231,13 @@ export class AllHeartsAPIClient {
   }
 
   /**
-   * Create/submit memory game session (legacy - for backward compatibility)
-   */
-  async submitMemoryGame(
-    submission: MemoryGameSubmission
-  ): Promise<GameSession> {
-    const encryptedData = encryptData(submission);
-    const response = await this.client.post<GameSession>(
-      "/api/games/memory/sessions",
-      encryptedData,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }
-    );
-    return response.data;
-  }
-
-  /**
    * Create a new Memory game session (Step 1: POST)
+   * NOTE: Encryption removed - now sends plain JSON
    */
   async createMemorySession(data: MemorySessionCreate): Promise<GameSession> {
-    const encryptedData = encryptData(data);
     const response = await this.client.post<GameSession>(
       "/api/games/memory/sessions",
-      encryptedData,
+      data,
       {
         headers: {
           "Content-Type": "text/plain",
@@ -268,12 +249,12 @@ export class AllHeartsAPIClient {
 
   /**
    * Update an existing Memory game session (Step 2: PATCH)
+   * NOTE: Encryption removed - now sends plain JSON
    */
   async updateMemorySession(data: MemorySessionUpdate): Promise<GameSession> {
-    const encryptedData = encryptData(data);
     const response = await this.client.patch<GameSession>(
       "/api/games/memory/sessions",
-      encryptedData,
+      data,
       {
         headers: {
           "Content-Type": "text/plain",
@@ -310,6 +291,16 @@ export class AllHeartsAPIClient {
   ): Promise<{ house: string; name: string }> {
     const response = await this.client.get<{ house: string; name: string }>(
       `/api/users?email=${encodeURIComponent(email)}`
+    );
+    return response.data;
+  }
+
+  /**
+   * Get full leaderboard data including house scores and individual player rankings
+   */
+  async getLeaderboard(): Promise<LeaderboardResponse> {
+    const response = await this.client.get<LeaderboardResponse>(
+      "/api/leaderboard"
     );
     return response.data;
   }

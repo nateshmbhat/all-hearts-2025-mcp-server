@@ -2,6 +2,76 @@
 
 All notable changes to the All Hearts 2025 MCP Server will be documented in this file.
 
+## [1.2.1] - 2025-11-24
+
+### Fixed - Memory Game Update Parameters
+
+**Removed unnecessary `duration` parameter from memory game updates to match actual API behavior:**
+
+#### Changes:
+- **REMOVED** `duration` field from `MemorySessionUpdate` type
+- **REMOVED** duration calculation logic from `update_memory_session` handler
+- `update_memory_session` now requires `endTime` to be provided (matching actual game behavior)
+- Tool description updated to reflect that `endTime` is required, not calculated
+
+#### Reason:
+Analysis of actual game submission shows the frontend sends:
+- `id`, `playerEmail`, `house`, `name`
+- `startTime`, `endTime` (both provided explicitly)
+- `triesUsed`, `matchesFound`, `score`, `completed`
+
+The frontend does NOT send `duration` - it only sends explicit `startTime` and `endTime` values.
+
+## [1.2.0] - 2025-11-24
+
+### Changed - Memory Game Encryption Removed & Duration Management
+
+**Removed encryption for Memory game API endpoints to match current frontend implementation:**
+
+#### API Client Changes:
+- `createMemorySession()` - Now sends plain JSON instead of encrypted data
+- `updateMemorySession()` - Now sends plain JSON instead of encrypted data
+- **REMOVED** `submitMemoryGame()` - Legacy method removed (use create + update workflow)
+
+All methods still use `Content-Type: text/plain` header but request body is now plain JSON.
+
+#### Type & Tool Updates:
+- Added `score` field to `MemorySessionUpdate` interface
+- Updated `update_memory_session` MCP tool to accept `score` parameter
+- **REMOVED** `submit_memory_game` MCP tool (use `create_memory_session` + `update_memory_session` instead)
+- **REMOVED** `MemoryGameSubmission` type (no longer needed)
+
+#### Duration Management (NEW):
+The `update_memory_session` handler now automatically handles duration constraints:
+
+- **Automatic endTime calculation**: `endTime = startTime + duration`
+- **Duration constraints**: 8-10 minutes (480-600 seconds)
+  - Minimum: 8 minutes (480 seconds)
+  - Maximum: 10 minutes (600 seconds)  
+  - Default: 9 minutes (540 seconds) if not provided
+- **Auto-clamping**: Duration values outside valid range are automatically adjusted
+- **endTime parameter ignored**: Any provided endTime value is overridden by the calculated value
+
+**Example:**
+```typescript
+// duration = 720 (12 min) → clamped to 600 (10 min)
+// duration = 300 (5 min) → clamped to 480 (8 min)
+// duration not provided → defaults to 540 (9 min)
+```
+
+#### Why This Change?
+
+Analysis of the frontend JavaScript code (page-4f2f146eb83fa45c.js) revealed:
+1. Memory game POST/PATCH requests now send plain JSON objects
+2. The encryption that was previously used has been removed
+3. Score calculation is now done client-side and sent in the PATCH request
+4. Duration must correspond to the time difference between startTime and endTime
+5. Memory game duration should be realistic (8-10 minutes for gameplay)
+
+This aligns with other games (Typing, Wordle, Crossword) which also use plain JSON. Only Sudoku still uses encryption.
+
+**Note:** See `MEMORY_GAME_UPDATE.md` for detailed technical analysis.
+
 ## [1.1.0] - 2025-11-22
 
 ### Changed - Memory Game Field Mapping
